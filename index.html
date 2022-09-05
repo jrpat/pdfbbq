@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>♨️ PDF BBQ</title>
+    <link rel=stylesheet href="bbq.css">
+  </head>
+  <body vbox=stretch-stretch>
+    <nav hbox=start-center id=menu flex=0>
+      <button onclick="draw()">Run</button>
+      <button onclick="dlcode()">DL Code</button>
+      <button onclick="dlpdf()">DL PDF</button>
+    </nav>
+
+    <div id=main hbox=-stretch>
+      <div id=code vbox=stretch-stretch>
+      </div>
+      <div id=view vbox=stretch-stretch></div>
+    </div>
+
+    <script src="codemirror.min.js"></script>
+    <script src="bbq.js" type=module></script>
+  </body>
+
+  <!--    Brought to you by Juan Patten    -->
+  <!--       github.com/jrpat/pdfbbq       -->
+</html>
+

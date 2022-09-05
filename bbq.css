@@ -1,0 +1,136 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; }
+
+[vbox], [hbox] {display: flex;}
+[vbox] {flex-direction: column;}
+[hbox] {flex-direction: row;}
+
+[vbox^=  "start-"  i], [hbox^=  "start-"  i] { justify-content: start; }
+[vbox^=    "end-"  i], [hbox^=    "end-"  i] { justify-content: end; }
+[vbox^= "center-"  i], [hbox^= "center-"  i] { justify-content: center; }
+[vbox^= "around-"  i], [hbox^= "around-"  i] { justify-content: space-around; }
+[vbox^=   "even-"  i], [hbox^=   "even-"  i] { justify-content: space-evenly; }
+[vbox^="between-"  i], [hbox^="between-"  i] { justify-content: space-between; }
+[vbox^="stretch-"  i], [hbox^="stretch-"  i] { justify-content: stretch; }
+
+[vbox$="-start"    i], [hbox$="-start"    i] { align-items: start; }
+[vbox$="-end"      i], [hbox$="-end"      i] { align-items: end; }
+[vbox$="-center"   i], [hbox$="-center"   i] { align-items: center; }
+[vbox$="-around"   i], [hbox$="-around"   i] { align-items: space-around; }
+[vbox$="-even"     i], [hbox$="-even"     i] { align-items: space-evenly; }
+[vbox$="-between"  i], [hbox$="-between"  i] { align-items: space-between; }
+[vbox$="-stretch"  i], [hbox$="-stretch"  i] { align-items: stretch; }
+[vbox$="-baseline" i], [hbox$="-baseline" i] { align-items: baseline; }
+
+[vbox] > *, [hbox] > * { flex: initial; }
+[vbox^="stretch"] > *, [hbox^="stretch-"] > * { flex: auto; }
+
+[flex="0"]{flex:0;} [flex="1"]{flex:1;} [flex="2"]{flex:2;}
+[flex="3"]{flex:3;} [flex="2"]{flex:4;} [flex="5"]{flex:5;}
+
+/**********************************************************************/
+
+:root {
+  --bg: #fff;
+  --fg: #222;
+  --fg-dim: #aaa;
+  --panel: rgba(0,0,0, 0.0625);
+  --divider: rgba(0,0,0, 0.0625);
+  --hover: rgba(0,0,0, 0.125);
+  --hover-dim: rgba(0,0,0, 0.01875);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #222;
+    --fg: #fff;
+    --fg-dim: #aaa;
+    --panel: rgba(255,255,255, 0.0625);
+    --divider: rgba(255,255,255, 0.0625);
+    --hover: rgba(255,255,255, 0.125);
+    --hover-dim: rgba(255,255,255, 0.01875);
+  }
+}
+
+/**********************************************************************/
+
+body {
+  background: var(--bg);
+  font-family: sans-serif;
+}
+
+
+#menu {
+  background: var(--panel);
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--divider);
+}
+
+#menu > button {
+  color: var(--fg);
+  line-height: 1em;
+  padding: 0.5em 0.75em;
+  border-radius: 5px;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+#menu > button:hover {
+  background: var(--hover);
+}
+
+#menu > button:active {
+  transform: scale(0.98);
+}
+
+
+#foot {
+  background: var(--panel);
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  border-top: 1px solid var(--divider);
+}
+
+/*#main:after {*/
+/*  content: 'Loading...';*/
+/*  position: absolute;*/
+/*  top: 50%;*/
+/*  left: 0;*/
+/*  width: 100%;*/
+/*  text-align: center;*/
+/*  line-height: 100px;*/
+/*  margin-top: -50px;*/
+/*  font-size: 3rem;*/
+/*}*/
+
+.gutter {
+  background: var(--divider);
+  cursor: col-resize;
+  position: relative;
+}
+
+.gutter:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: 21px;
+  height: 100%;
+}
+
+.gutter:hover:after {
+  background: var(--hover-dim);
+}
+
+#code, #view {
+  overflow: scroll;
+}
+
+.cm-editor {
+  height: 1px; /* why does this work? */
+}
+
