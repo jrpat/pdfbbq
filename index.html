@@ -14,11 +14,24 @@
           <a href="https://github.com/jrpat/pdfbbq" target="_blank">See The Code</a>
         </div>
       </button>
-      <button onclick="draw(1)">Run</button>
-      <button>Download
+      <button>File
+        <div vbox class=dd>
+          <a onclick="newfile()">New File</a>
+          <a onclick="newintro()">New Intro</a>
+          <a class=has-sub-dd>Open Recent
+            <span vbox class=sub-dd id=mru></span>
+          </a>
+          <hr>
+          <a onclick="rename()">Rename&hellip;</a>
+          <hr>
+          <a onclick="draw(1)">Run Code</a>
+        </div>
+      </button>
+      <button>Export
         <div vbox class=dd>
           <a onclick="dlcode()">Download Code</a>
           <a onclick="dlpdf()">Download PDF</a>
+          <hr>
           <a onclick="printpdf()">Print PDF</a>
         </div>
       </button>
@@ -36,19 +49,25 @@
           <span><code>fix(n)</code>
             - Round <tt>n</tt> to 3 decimals</span>
           <span><code>in2pt(n)</code>
-            - Inches → points</span>
+            - Inches → Points</span>
           <span><code>pt2in(n)</code>
-            - Points → inches</span>
+            - Points → Inches</span>
           <span><code>cm2pt(n)</code>
-            - Centimeters → points</span>
+            - Centimeters → Points</span>
           <span><code>pt2cm(n)</code>
-            - Points → centimeters</span>
+            - Points → Centimeters</span>
           <span><code>mm2pt(n)</code>
             - Millimeters → points</span>
           <span><code>pt2mm(n)</code>
-            - Points → millimeters</span>
+            - Points → Millimeters</span>
           <span><code>PPI</code>
-            - Points per inch</span>
+            - Points Per Inch</span>
+          <hr>
+          <b>Notes:</b>
+          <span><tt>0,0</tt> is the bottom-left.</span>
+          <hr>
+          <b>Resources:</b>
+          <span><a href="https://pdf-lib.js.org" target="_blank">PDF-LIB Documentation</a><br></span>
         </div>
       </button>
       <i id=msg>Test message</i>

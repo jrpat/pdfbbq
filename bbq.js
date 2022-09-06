@@ -67,7 +67,6 @@ function completeFromObject(obj) {
   }
 }
 
-
 function download(filename, text) {
   if (!text) { return alert('No file') }
   let a = document.createElement('a')
@@ -85,20 +84,14 @@ function msg(m) {
 }
 
 window.dlcode = () => {
-  download('bbq.js', `data:text/plain,${getcode()}`)
-  msg('✔ Saved to your downloads as bbq.js')
+  let name = current_file+'.js' 
+  download(name, `data:text/plain,${getcode()}`)
+  msg('✓ Downloaded '+name)
 }
 window.dlpdf = () => {
-  download('bbq.pdf', $('#view-iframe').src)
-  msg('✔ Saved to your downloads as bbq.pdf')
-}
-
-window.sharecode = async () => {
-  const pb = 'https://corsproxy.io/?https://envs.sh'
-  let body = new FormData
-  body.set('file', new File([getcode()], 'bbq.js', {type:'text/plain'}))
-  let resp = await fetch(pb, {method:'POST', body})
-  let url = await resp.text()
+  let name = current_file+'.pdf'
+  download(name, $('#view-iframe').src)
+  msg('✓ Downloaded '+name)
 }
 
 window.printpdf = () => {
@@ -114,18 +107,133 @@ window.printpdf = () => {
   }
 }
 
+const savemsg = '👍 PDFBBQ automatically saves your work.'
+
 D.addEventListener('keydown', e => {
-  if ((e.keyCode == 83) && (ua.mac ? e.metaKey : e.ctrlKey)) {
-    e.preventDefault()
-    msg('👍 PDFBBQ automatically saves your work.')
+  if (ua.mac ? e.metaKey : e.ctrlKey) {
+    if (e.key == 's') { e.preventDefault(); msg(savemsg) }
+    if (e.key == 'p') { e.preventDefault(); printpdf() }
+    if (e.key == 'Enter') { e.preventDefault(); draw() }
   }
 })
 
 
-let ed
+window.intro = `// Welcome to PDF BBQ!
+//
+// You can use these shortcuts to get around:
+//
+//     ${MOD}+Enter   Run your code
+//     ${MOD}+P       Print the PDF
+//
+//  These variables are predefined for you:
+//
+//     PDF   The PDFLib module
+//     doc   The PDFDocument instance
+//
+//  Hover the [Help] menu above for more
+//  variables, functions, and shortcuts!
+//
+//  When you're ready, delete this comment
+//  and start cooking up a PDF! ♨️
 
+let page = doc.addPage(PDF.PageSizes.Letter)
+let {width, height} = page.getSize()
+
+let purple = PDF.rgb(0.4, 0.2, 0.6)
+let white = PDF.rgb(1, 1, 1)
+
+let head_size = width/4
+let eye_size = width/32
+let mouth_size = width/7
+
+let cx = width/2
+let cy = height/2 + height/8
+
+page.drawCircle({
+  x: cx,
+  y: cy,
+  size: head_size,
+  color: purple
+})
+
+page.drawCircle({
+  x: cx,
+  y: cy - mouth_size/8,
+  size: mouth_size,
+  color: white
+})
+page.drawEllipse({
+  x: cx,
+  y: cy + mouth_size/8,
+  xScale: mouth_size*1.25,
+  yScale: mouth_size/1.25,
+  color: purple
+})
+
+let draw_eye = (offset) => {
+  page.drawEllipse({
+    x: cx + eye_size*3*offset,
+    y: cy + eye_size*2.5,
+    xScale: eye_size,
+    yScale: eye_size*1.5,
+    color: white
+  })
+}
+draw_eye(1)
+draw_eye(-1)
+`
+
+let ed
 const getcode = () => ed.state.doc.toString()
 
+let current_file = db.get('current_file') || 'pdfbbq'
+let files = db.get('files') || {}
+
+window.newintro = () => {
+  let intros = Object.keys(files).filter(f => f.indexOf('intro') == 0)
+  let name = `intro-${intros.length}`
+  newfile(name, intro)
+}
+
+window.newfile = (name, content) => {
+  name = name || prompt('New File Name:')
+  if (!name) return
+  if (files[name]) {
+    if (!confirm(`File ${name} exists. Erase it?`)) return
+  }
+  db.set(`file__${name}`, content || '')
+  loadfile(name)
+}
+
+window.loadfile = (name) => {
+  let code = db.get(`file__${name}`) || ''
+  current_file = name
+  if (!files[current_file]) { files[current_file] = {} }
+  files[current_file].t = Date.now()
+  ed.dispatch({
+    changes: {from:0, to:ed.state.doc.length, insert:code}
+  })
+  setTimeout(populate_recents, 2000)
+  draw()
+}
+
+window.rename = () => {
+  let name = prompt('Rename File To:')
+  if (!name) return
+  let files = db.get('files')
+}
+
+function populate_recents() {
+  let times = Object.entries(db.get('files') || {})
+  times.sort((a, b) => a[1].t > b[1].t ? -1 : 1)
+  $('#mru').innerHTML = ''
+  for (let [name, _] of times) {
+    let b = document.createElement('b')
+    b.onclick = () => loadfile(name)
+    b.innerText = name
+    mru.append(b)
+  }
+}
 
 async function init() {
   Split(['#code', '#view'], {
@@ -146,34 +254,7 @@ async function init() {
     ,fix: n => Number(n.toFixed(3))
   }
 
-  let js = new CM.lang.LanguageSupport(CM.js.javascriptLanguage, [
-    CM.js.javascriptLanguage.data.of({autocomplete: completeFromObject(drawctx)})
-  ])
-
-  ed = new CM.EditorView({
-    doc: db.get('code') || `// Variables:
-//    PDF:  a PDFLib instance (see https://pdf-lib.js.org)
-//    doc:  a new PDFDocument instance
-//    page: the first page of the document`,
-    extensions: [
-      CM.view.EditorView.updateListener.of(debounce(1000, e => {
-        db.set('code', getcode())
-      })),
-      CM.view.keymap.of([
-        {key: MOD+'-Enter', run: () => {draw(); return true}},
-        {key: MOD+'-p', run: () => {printpdf(); return true}},
-        {key: MOD+'-s', run: () => {
-          msg('👍 PDFBBQ automatically saves your work.')
-          return true
-        }},
-      ]),
-      CM.view.keymap.of([CM.cmd.indentWithTab]),
-      CM.basicSetup, js,
-    ],
-    parent: $('#code')
-  }) 
-
-   async function do_draw() {
+  async function do_draw() {
     drawctx.doc = await PDF.PDFDocument.create()
     let code = `
 ${getcode()}
@@ -192,14 +273,44 @@ ${getcode()}
   window.draw = showmsg => {
     ++window.draw.n
     if (showmsg && (window.draw.n < 3)) {
-      msg('💁 You can also run your code using <b>'+MOD+'+Enter</b>.')
+      msg('💁 You can also run your code by pressing <b>'+MOD+'+Enter</b>.')
     }
     do_draw()
   }
   window.draw.n = -1
 
-  draw()
+  let js = new CM.lang.LanguageSupport(CM.js.javascriptLanguage, [
+    CM.js.javascriptLanguage.data.of({autocomplete: completeFromObject(drawctx)})
+  ])
+
+  ed = new CM.EditorView({
+//    doc: db.get(`file__${current_file}`) || new_file,
+    extensions: [
+      CM.view.EditorView.updateListener.of(debounce(1000, e => {
+        db.set(`file__${current_file}`, getcode())
+        files[current_file].t = Date.now()
+        db.set('files', files)
+        db.set('current_file', current_file)
+      })),
+      CM.view.keymap.of([
+        {key: MOD+'-Enter', run: () => {draw(); return true}},
+        {key: MOD+'-p', run: () => {printpdf(); return true}},
+        {key: MOD+'-s', run: () => { msg(savemsg); return true }},
+      ]),
+      CM.view.keymap.of([CM.cmd.indentWithTab]),
+      CM.basicSetup, js,
+    ],
+    parent: $('#code')
+  })
+
+  if (files[current_file])
+    loadfile(current_file)
+  else
+    newfile('pdfbbq', intro)
 }
 
+window.db = db
+
 init()
+populate_recents()
 

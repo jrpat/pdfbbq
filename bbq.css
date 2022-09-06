@@ -45,18 +45,18 @@ html, body { width:100%; height:100%; }
   --hover-dim: rgba(0,0,0, 0.05);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #222;
-    --fg: #fff;
-    --fg-dim: #aaa;
-    --panel: rgba(255,255,255, 0.0625);
-    --panel-opaque: rgb(39, 39, 39);
-    --divider: rgba(255,255,255, 0.0625);
-    --hover: rgba(255,255,255, 0.125);
-    --hover-dim: rgba(255,255,255, 0.05);
-  }
-}
+/*@media (prefers-color-scheme: dark) {*/
+/*  :root {*/
+/*    --bg: #222;*/
+/*    --fg: #fff;*/
+/*    --fg-dim: #aaa;*/
+/*    --panel: rgba(255,255,255, 0.0625);*/
+/*    --panel-opaque: rgb(39, 39, 39);*/
+/*    --divider: rgba(255,255,255, 0.0625);*/
+/*    --hover: rgba(255,255,255, 0.125);*/
+/*    --hover-dim: rgba(255,255,255, 0.05);*/
+/*  }*/
+/*}*/
 
 /**********************************************************************/
 
@@ -91,7 +91,7 @@ body {
   background: var(--hover);
 }
 
-#menu > button:hover .dd {
+#menu > button:hover > .dd {
   visibility: visible;
 }
 
@@ -120,7 +120,7 @@ body {
   left: 0;
   z-index: 999;
   background: var(--panel-opaque);
-  padding: 1em;
+  padding: 0.75em 1em;
   box-shadow: 0 3px 12px rgba(0,0,0, 0.2);
   border: 1px solid var(--divider);
   visibility: hidden;
@@ -129,6 +129,8 @@ body {
   line-height: 1.5;
   cursor: default;
   text-align: left;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .dd.center {
@@ -143,12 +145,15 @@ body {
   visibility: visible;
 }
 
-.dd > :not(:last-child) {
+.dd > :not(:last-child):not(hr) {
   margin-bottom: 0.5em;
 }
 
 .dd > hr {
-  margin: 0.5em 0 1em 0;
+  margin: 0.25em 0 0.75em 0;
+  border: none;
+  height: 1px;
+  background: var(--divider);
 }
 
 .dd a {
@@ -157,10 +162,94 @@ body {
   border-radius: 3px;
   margin-left: -3px;
   margin-right: -3px;
+  position: relative;
 }
 
 .dd a:hover {
   background: var(--hover-dim);
+}
+
+.has-sub-dd {
+  position: relative;
+}
+
+.has-sub-dd:after {
+  content: '►';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  line-height: 0.625em;
+  margin-top: -0.3125em;
+  font-size: 0.625em;
+  margin-right: 1em;
+}
+
+.has-sub-dd:hover:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0.75em;
+  margin-top: -0.75em;
+  margin-left: -0.75em;
+  box-sizing: content-box;
+}
+
+.has-sub-dd:hover > .sub-dd {
+  visibility: visible;
+}
+
+.sub-dd {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  z-index: 999;
+  background: var(--panel-opaque);
+  padding: 1em;
+  box-shadow: 0 3px 12px rgba(0,0,0, 0.2);
+  border: 1px solid var(--divider);
+  visibility: hidden;
+  font-weight: normal;
+  min-width: 8rem;
+  max-width: 40vw;
+  line-height: 1.5;
+  cursor: default;
+  text-align: left;
+  border-radius: 5px;
+  margin-top: -1em;
+  max-height: 23.25em;
+  overflow: scroll;
+}
+
+.sub-dd b {
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-left: -3px;
+  margin-right: -3px;
+  position: relative;
+  font-weight: normal;
+}
+
+.sub-dd b:hover {
+  background: var(--hover-dim);
+}
+
+.sub-dd > :not(:last-child):not(hr) {
+  margin-bottom: 0.5em;
+}
+
+.sub-dd > hr {
+  margin: 0.25em 0 0.75em 0;
+  border: none;
+  height: 1px;
+  background: var(--divider);
+}
+
+#filename {
+  color: var(--fg-dim);
 }
 
 tt, code {
