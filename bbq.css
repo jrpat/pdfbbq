@@ -30,14 +30,19 @@ html, body { width:100%; height:100%; }
 
 /**********************************************************************/
 
+@page {
+  margin: 0mm;
+}
+
 :root {
   --bg: #fff;
   --fg: #222;
   --fg-dim: #aaa;
   --panel: rgba(0,0,0, 0.0625);
+  --panel-opaque: rgb(238, 238, 238);
   --divider: rgba(0,0,0, 0.0625);
   --hover: rgba(0,0,0, 0.125);
-  --hover-dim: rgba(0,0,0, 0.01875);
+  --hover-dim: rgba(0,0,0, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -46,9 +51,10 @@ html, body { width:100%; height:100%; }
     --fg: #fff;
     --fg-dim: #aaa;
     --panel: rgba(255,255,255, 0.0625);
+    --panel-opaque: rgb(39, 39, 39);
     --divider: rgba(255,255,255, 0.0625);
     --hover: rgba(255,255,255, 0.125);
-    --hover-dim: rgba(255,255,255, 0.01875);
+    --hover-dim: rgba(255,255,255, 0.05);
   }
 }
 
@@ -64,6 +70,7 @@ body {
   background: var(--panel);
   padding: 5px 10px;
   border-bottom: 1px solid var(--divider);
+  z-index: 9;
 }
 
 #menu > button {
@@ -76,14 +83,94 @@ body {
   border: none;
   cursor: pointer;
   margin-right: 10px;
+  font-weight: bold;
+  position: relative;
 }
 
 #menu > button:hover {
   background: var(--hover);
 }
 
-#menu > button:active {
-  transform: scale(0.98);
+#menu > button:hover .dd {
+  visibility: visible;
+}
+
+#msg {
+  padding: 0 1em;
+  letter-spacing: 0.25px;
+  font-size: 0.675rem;
+  color: var(--fg-dim);
+  margin-left: 1em;
+  transition: opacity 0.25s ease-in;
+  opacity: 0;
+}
+
+#msg.show {
+  opacity: 1;
+  transition: none;
+}
+
+#logo {
+  margin-right: 1rem;
+}
+
+.dd {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 999;
+  background: var(--panel-opaque);
+  padding: 1em;
+  box-shadow: 0 3px 12px rgba(0,0,0, 0.2);
+  border: 1px solid var(--divider);
+  visibility: hidden;
+  font-weight: normal;
+  width: 8rem;
+  line-height: 1.5;
+  cursor: default;
+  text-align: left;
+}
+
+.dd.center {
+  text-align: center;
+}
+
+.dd.wide {
+  width: 20em;
+}
+
+.dd.show {
+  visibility: visible;
+}
+
+.dd > :not(:last-child) {
+  margin-bottom: 0.5em;
+}
+
+.dd > hr {
+  margin: 0.5em 0 1em 0;
+}
+
+.dd a {
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-left: -3px;
+  margin-right: -3px;
+}
+
+.dd a:hover {
+  background: var(--hover-dim);
+}
+
+tt, code {
+  font-family: monospace;
+}
+
+code {
+  padding: 3px;
+  background: rgba(0,0,0, 0.05);
+  border-radius: 3px;
 }
 
 
@@ -94,18 +181,6 @@ body {
   color: var(--fg-dim);
   border-top: 1px solid var(--divider);
 }
-
-/*#main:after {*/
-/*  content: 'Loading...';*/
-/*  position: absolute;*/
-/*  top: 50%;*/
-/*  left: 0;*/
-/*  width: 100%;*/
-/*  text-align: center;*/
-/*  line-height: 100px;*/
-/*  margin-top: -50px;*/
-/*  font-size: 3rem;*/
-/*}*/
 
 .gutter {
   background: var(--divider);
@@ -122,15 +197,15 @@ body {
   height: 100%;
 }
 
-.gutter:hover:after {
-  background: var(--hover-dim);
-}
-
 #code, #view {
   overflow: scroll;
 }
 
 .cm-editor {
   height: 1px; /* why does this work? */
+}
+
+#view-iframe {
+  border: 0;
 }
 

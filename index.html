@@ -6,22 +6,63 @@
   </head>
   <body vbox=stretch-stretch>
     <nav hbox=start-center id=menu flex=0>
-      <button onclick="draw()">Run</button>
-      <button onclick="dlcode()">DL Code</button>
-      <button onclick="dlpdf()">DL PDF</button>
+      <button id=logo>♨️ 
+        <div vbox class="dd center">
+          <b>PDF BBQ</b>
+          <i>Cook up a PDF</i>
+          <span>Brought to you<br>by Juan Patten</span>
+          <a href="https://github.com/jrpat/pdfbbq" target="_blank">See The Code</a>
+        </div>
+      </button>
+      <button onclick="draw(1)">Run</button>
+      <button>Download
+        <div vbox class=dd>
+          <a onclick="dlcode()">Download Code</a>
+          <a onclick="dlpdf()">Download PDF</a>
+          <a onclick="printpdf()">Print PDF</a>
+        </div>
+      </button>
+      <button>Help
+        <div vbox class="dd wide">
+          <b>Shortcuts:</b>
+          <span><code class=mod>Cmd+Enter</code> - Run Code</span>
+          <span><code class=mod>Cmd+P</code> - Print PDF</span>
+          <hr>
+          <b>Variables:</b>
+          <span><code>PDF</code> 
+            - The <tt><a href="https://pdf-lib.js.org/docs/api/" target="_blank">PDFLib</a></tt> module</span>
+          <span><code>doc</code> 
+            - A <tt><a href="https://pdf-lib.js.org/docs/api/classes/pdfdocument" target="_blank">PDFDocument</a></tt> instance</span>
+          <span><code>fix(n)</code>
+            - Round <tt>n</tt> to 3 decimals</span>
+          <span><code>in2pt(n)</code>
+            - Inches → points</span>
+          <span><code>pt2in(n)</code>
+            - Points → inches</span>
+          <span><code>cm2pt(n)</code>
+            - Centimeters → points</span>
+          <span><code>pt2cm(n)</code>
+            - Points → centimeters</span>
+          <span><code>mm2pt(n)</code>
+            - Millimeters → points</span>
+          <span><code>pt2mm(n)</code>
+            - Points → millimeters</span>
+          <span><code>PPI</code>
+            - Points per inch</span>
+        </div>
+      </button>
+      <i id=msg>Test message</i>
     </nav>
 
     <div id=main hbox=-stretch>
-      <div id=code vbox=stretch-stretch>
+      <div id=code vbox=stretch-stretch></div>
+      <div id=view vbox=stretch-stretch>
+        <iframe id=view-iframe></iframe>
       </div>
-      <div id=view vbox=stretch-stretch></div>
     </div>
 
     <script src="codemirror.min.js"></script>
     <script src="bbq.js" type=module></script>
   </body>
-
-  <!--    Brought to you by Juan Patten    -->
-  <!--       github.com/jrpat/pdfbbq       -->
 </html>
 
