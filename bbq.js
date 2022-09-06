@@ -251,7 +251,7 @@ async function init() {
     ,cm2pt: n => in2pt(n / 2.54)
     ,pt2mm: n => pt2in(n) * 25.4
     ,mm2pt: n => in2pt(n / 25.4)
-    ,fix: n => Number(n.toFixed(3))
+    ,fix: (n,d=3) => Number(n.toFixed(d))
   }
 
   async function do_draw() {
@@ -293,9 +293,9 @@ ${getcode()}
         db.set('current_file', current_file)
       })),
       CM.view.keymap.of([
-        {key: MOD+'-Enter', run: () => {draw(); return true}},
-        {key: MOD+'-p', run: () => {printpdf(); return true}},
-        {key: MOD+'-s', run: () => { msg(savemsg); return true }},
+        {key: MOD+'-Enter', run: () => {return true}},
+        {key: MOD+'-p', run: () => {return true}},
+        {key: MOD+'-s', run: () => {return true}},
       ]),
       CM.view.keymap.of([CM.cmd.indentWithTab]),
       CM.basicSetup, js,
