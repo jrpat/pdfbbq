@@ -251,7 +251,7 @@ async function init() {
     ,cm2pt: n => in2pt(n / 2.54)
     ,pt2mm: n => pt2in(n) * 25.4
     ,mm2pt: n => in2pt(n / 25.4)
-    ,fix: (n,d=3) => Number(n.toFixed(d))
+    ,fix: (n,d=4) => Number(n.toFixed(d))
   }
 
   async function do_draw() {

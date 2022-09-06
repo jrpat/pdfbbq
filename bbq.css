@@ -125,7 +125,7 @@ body {
   border: 1px solid var(--divider);
   visibility: hidden;
   font-weight: normal;
-  width: 8rem;
+  min-width: 8rem;
   line-height: 1.5;
   cursor: default;
   text-align: left;
