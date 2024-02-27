@@ -3,6 +3,7 @@
   <head>
     <title>♨️ PDF BBQ</title>
     <link rel=stylesheet href="bbq.css">
+    <meta name="viewport" content="width=device-width">
   </head>
   <body vbox=stretch-stretch>
     <nav hbox=start-center id=menu flex=0>
@@ -82,6 +83,13 @@
 
     <script src="codemirror.min.js"></script>
     <script src="bbq.js" type=module></script>
+    <script>
+      if ((window.innerWidth < 600) || (window.innerHeight < 330)) {
+        alert(`PDF BBQ is optimized for larger screens.
+
+You can still use it, but it's better on desktop.`)
+      }
+    </script>
   </body>
 </html>
 
